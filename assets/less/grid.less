@@ -1,0 +1,131 @@
+@import url(grid-variables.less);
+//CONTAINER -------------------------------
+
+.@{--grid-class} {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+// Align Items in Container Vertically
+.@{--grid-class}-top {
+  align-items: flex-start;
+}
+
+.@{--grid-class}-bottom {
+  align-items: flex-end;
+}
+
+.@{--grid-class}-middle {
+  align-items: center;
+}
+
+// Align Items in Container Horizontally
+.@{--grid-class}-left {
+  justify-content: start;
+}
+
+.@{--grid-class}-right {
+  justify-content: end;
+}
+
+.@{--grid-class}-center {
+  justify-content: center;
+}
+
+//Equal Height Items in Container
+.@{--grid-class}-eq-ht{
+  align-items: stretch;
+}
+
+.row{
+  margin-left: -@--gutter;
+  margin-right: -@--gutter;
+}
+
+//ITEMS ---------------------------------------
+
+.@{--cell-class} {
+  flex: 1;
+  padding-right: @--gutter;
+  padding-left: @--gutter;
+}
+
+//Align Item Vertically
+.@{--cell-class}-top {
+  align-self: flex-start;
+}
+
+.@{--cell-class}-bottom {
+  align-self: flex-end;
+}
+
+.@{--cell-class}-middle {
+  align-self: center;
+}
+
+.@{--cell-class}-auto-size {
+  flex: none;
+}
+
+.@{--cell-class}-no-gutter{
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+//COLUMNS -------------------------------------
+
+//Column Generator Function
+.generate-columns(@n, @size : xs, @i: 1) when (@i =< @n) {
+  .@{--grid-class}-@{size}-@{i} {
+    flex: 0 0 ((100%/@--max-cols) * @i);
+    box-sizing: border-box;
+  }
+  .generate-columns(@n, @size, (@i + 1));
+}
+
+//Column Offset Generator Function
+.generate-offset(@n, @size : xs, @i: 1) when (@i =< @n) {
+  .@{--grid-class}-@{size}-offset-@{i} {
+    margin-left: (100%/@--max-cols) * @i;
+  }
+  .generate-offset(@n, @size, (@i + 1));
+}
+
+.cnt(@width){
+  flex-basis:@width;
+  margin-left:(100% - @width) / 2;
+}
+
+//RESPONSIVENESS ------------------------------
+
+@media (max-width: @--break-sm) {
+  .generate-columns(@--max-cols, xs);
+  .generate-offset(@--max-cols, xs);
+  .container{
+    .cnt(@--break-sm);
+  }
+}
+@media (min-width: @--break-sm) and (max-width: @--break-md) {
+  .generate-columns(@--max-cols, sm);
+  .generate-offset(@--max-cols, sm);
+  .container{
+    .cnt(@--break-sm);
+  }
+}
+@media (min-width: @--break-md) and (max-width: @--break-lg) {
+  .generate-columns(@--max-cols, md);
+  .generate-offset(@--max-cols, md);
+  .container{
+    .cnt(@--break-sm);
+  }
+}
+@media (min-width: @--break-lg) {
+  .generate-columns(@--max-cols, lg);
+  .generate-offset(@--max-cols, lg);
+  .container{
+    .cnt(80%);
+  }
+}
